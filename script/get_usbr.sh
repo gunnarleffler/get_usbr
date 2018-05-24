@@ -24,7 +24,7 @@ export OFFICE FN
 
 START=`date -u +%y%m%d%H%M%S`
 OUTPUT=$SOURCE/control/output/instapost
-LOOKBACK=4
+LOOKBACK=3
 RUNOFFICE=all
 
 #====================================================
@@ -73,7 +73,7 @@ echo LOOKBACK [DAYS] = "${LOOKBACK}"
 # Get a lock for this process.  If existing lock is two hours old, the owning
 # process is probably dead, so continue on as if the lock were ours.
 #====================================================
-LOCK_DIR=${FN_SOURCE}/data/${SCRIPT_NAME}.lock
+LOCK_DIR=${FN_SOURCE}/data/${RUNOFFICE}.lock
 ${CNTL_LIB_DIR}/lock_dir $LOCK_DIR 1
 if [ $? -ne 0 ]; then
   exit
@@ -99,20 +99,24 @@ cd $SCRIPT_DIR
 
 
 if [ "$RUNOFFICE" = "all" ] || [ "$RUNOFFICE" = "nwdp" ]; then
-  ./usbr_to_yaml nwdp.conf -l $LOOKBACK > $OUTPUT/${RUNOFFICE}_${FN}_${STAMP}.yaml
+  ./usbr_to_yaml nwdp.conf -l $LOOKBACK -d > ../temp/${RUNOFFICE}_${FN}_${STAMP}.yaml
 fi
 
 if [ "$RUNOFFICE" = "all" ] || [ "$RUNOFFICE" = "nww" ]; then
-  ./usbr_to_yaml nww.conf -l $LOOKBACK > $OUTPUT/${RUNOFFICE}_${FN}_${STAMP}.yaml
+  ./usbr_to_yaml nww.conf -l $LOOKBACK -d > ../temp/${RUNOFFICE}_${FN}_${STAMP}.yaml
 fi
 
 if [ "$RUNOFFICE" = "all" ] || [ "$RUNOFFICE" = "nws" ]; then
-  ./usbr_to_yaml nws.conf -l $LOOKBACK > $OUTPUT/${RUNOFFICE}_${FN}_${STAMP}.yaml
+  ./usbr_to_yaml nws.conf -l $LOOKBACK -d > ../temp/${RUNOFFICE}_${FN}_${STAMP}.yaml
 fi
 
 if [ "$RUNOFFICE" = "all" ] || [ "$RUNOFFICE" = "nwp" ]; then
-  ./usbr_to_yaml nwp.conf -l $LOOKBACK > $OUTPUT/${RUNOFFICE}_${FN}_${STAMP}.yaml
+  ./usbr_to_yaml nwp.conf -l $LOOKBACK -d > ../temp/${RUNOFFICE}_${FN}_${STAMP}.yaml
 fi
+
+
+mv ../temp/${RUNOFFICE}_${FN}_${STAMP}.yaml ${OUTPUT}
+
 
 #====================================================
 # Cleanup and log success
