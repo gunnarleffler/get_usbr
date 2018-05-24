@@ -88,9 +88,8 @@ new_log
 Start_Time=`date -u +%H:%M:%S`
 log_message "Script" "Start"
 
-# Set backup file suffix timestamp and remove previous temporary files
+# Set backup file suffix timestamp 
 STAMP=`date -u +%Y%m%d`
-rm -f ${FN_SOURCE}/temp/*
 
 #====================================================
 # Get data
@@ -99,23 +98,23 @@ cd $SCRIPT_DIR
 
 
 if [ "$RUNOFFICE" = "all" ] || [ "$RUNOFFICE" = "nwdp" ]; then
-  ./usbr_to_yaml nwdp.conf -l $LOOKBACK -d > ../temp/${RUNOFFICE}_${FN}_${STAMP}.yaml
+  ./usbr_to_json nwdp.conf -l $LOOKBACK -d > ../temp/${RUNOFFICE}_${FN}_${START}.json
 fi
 
 if [ "$RUNOFFICE" = "all" ] || [ "$RUNOFFICE" = "nww" ]; then
-  ./usbr_to_yaml nww.conf -l $LOOKBACK -d > ../temp/${RUNOFFICE}_${FN}_${STAMP}.yaml
+  ./usbr_to_json nww.conf -l $LOOKBACK -d > ../temp/${RUNOFFICE}_${FN}_${START}.json
 fi
 
 if [ "$RUNOFFICE" = "all" ] || [ "$RUNOFFICE" = "nws" ]; then
-  ./usbr_to_yaml nws.conf -l $LOOKBACK -d > ../temp/${RUNOFFICE}_${FN}_${STAMP}.yaml
+  ./usbr_to_json nws.conf -l $LOOKBACK -d > ../temp/${RUNOFFICE}_${FN}_${START}.json
 fi
 
 if [ "$RUNOFFICE" = "all" ] || [ "$RUNOFFICE" = "nwp" ]; then
-  ./usbr_to_yaml nwp.conf -l $LOOKBACK -d > ../temp/${RUNOFFICE}_${FN}_${STAMP}.yaml
+  ./usbr_to_json nwp.conf -l $LOOKBACK -d > ../temp/${RUNOFFICE}_${FN}_${START}.json
 fi
 
 
-mv ../temp/${RUNOFFICE}_${FN}_${STAMP}.yaml ${OUTPUT}
+mv ../temp/${RUNOFFICE}*.json ${OUTPUT}
 
 
 #====================================================
