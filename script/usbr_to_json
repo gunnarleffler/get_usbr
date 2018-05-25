@@ -4,6 +4,9 @@ from datetime import datetime, timedelta
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
+headers = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36'}
+
+
 ###############################################################################
 
 
@@ -58,11 +61,11 @@ def strip_float(input):
 
 service = {
     'daily_alt'        : 'daily.pl',
-    'daily_alt2'    : 'webarccsv.pl',
+    'daily_alt2'    : 'yak/webarccsv.pl',
     'daily'   : 'yak/webdaycsv.pl',
-    'realtime_alt'     : 'instant.pl',
-    'realtime_alt2' : 'webdaycsv.pl',
-    'realtime': 'yak/webdaycsv.pl'
+    'realtime'     : 'v1/instant.pl',
+    'realtime_alt': 'yak/webdaycsv.pl',
+    'realtime_alt2'     : 'instant.pl'
 }
 
 parser = argparse.ArgumentParser()
@@ -120,19 +123,19 @@ for line in open(args.station_file):
     if mode == 'daily': url = url.replace(service['daily'], service['daily_alt'])
   if args.debug == True:
     sys.stderr.write(url + '\n')
-  input = process_usbr(mode, requests.get(url, verify=False).text)
+  input = process_usbr(mode, requests.get(url, verify=False, headers=headers).text)
   if len(input) < 1:
     if mode == 'realtime': url = url.replace(service['realtime'], service['realtime_alt'])
     if mode == 'daily': url = url.replace(service['daily'], service['daily_alt'])
     if args.debug == True:
       sys.stderr.write('No data found trying alternate service:\n%s\n' % (url))
-    input = process_usbr(mode, requests.get(url, verify=False).text)
+    input = process_usbr(mode, requests.get(url, verify=False, headers=headers).text)
   if len(input) < 1:
     if mode == 'realtime': url = url.replace(service['realtime_alt'], service['realtime_alt2'])
     if mode == 'daily': url = url.replace(service['daily_alt'], service['daily_alt2'])
     if args.debug == True:
       sys.stderr.write('No data found trying alternate service 2:\n%s\n' % (url))
-    input = process_usbr(mode, requests.get(url, verify=False).text)
+    input = process_usbr(mode, requests.get(url, verify=False, headers=headers).text)
 
   print '{"%s":{\n "timezone": "%s",\n "units": "%s",\n "timeseries":{' % (
       ts_id, timezone, units)
